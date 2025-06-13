@@ -1,4 +1,11 @@
 name: aula_inteligente
+on:
+  # Este es el evento que dispara el workflow.
+  # Aquí le decimos que se ejecute cada vez que haya un push a la rama 'main'.
+  push:
+    branches:
+      - main
+
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
