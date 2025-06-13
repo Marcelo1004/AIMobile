@@ -1,13 +1,12 @@
 name: aula_inteligente
-
 on:
   push:
     branches:
-      - main # Asegúrate de que esta sea la rama correcta de tu repositorio móvil
+      - main
 
 jobs:
-  build_android: # Renombre el job para mayor claridad (build_android vs build_ios)
-    runs-on: ubuntu-latest # ubuntu-latest es adecuado para compilar Android
+  build_android:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -16,23 +15,22 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          # ******** ¡MUY IMPORTANTE! REEMPLAZA ESTO CON LA VERSIÓN EXACTA DE FLUTTER QUE USAS ********
-          # Basado en tu pubspec.yaml, que indica 'sdk: ^3.7.2', Flutter 3.7.2 es una buena elección.
-          flutter-version: '3.7.2' # <-- ¡Esta es la versión que pusiste y parece correcta!
+          flutter-version: '3.7.2' # Versión de Flutter que ya confirmaste
 
+      # ****** ¡CAMBIO IMPORTANTE AQUÍ! ********
+      # Especificamos el directorio de trabajo para este y los siguientes comandos.
+      # Asumo que la raíz de tu proyecto Flutter está en la raíz del repositorio clonado.
       - name: Get Flutter dependencies
-        run: flutter pub get # Instala las dependencias de Dart/Flutter de tu pubspec.yaml
-
-      # Opcional: Si tienes pruebas unitarias, puedes descomentar este paso
-      # - name: Run Flutter tests
-      #   run: flutter test
+        run: flutter pub get
+        working-directory: ./ # Asegura que se ejecuta en la raíz del repositorio
 
       - name: Build Android APK
-        run: flutter build apk --release # Compila la aplicación para Android en modo release
+        run: flutter build apk --release
+        working-directory: ./ # Asegura que se ejecuta en la raíz del repositorio
 
       - name: Upload Android APK
-        uses: actions/upload-artifact@v4 # Sube el APK generado como un artefacto de la ejecución
+        uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: build/app/outputs/flutter-apk/app-release.apk # Ruta estándar donde Flutter genera el APK
-          retention-days: 5 # Días que se guarda el artefacto (puedes ajustar este valor)
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 5
