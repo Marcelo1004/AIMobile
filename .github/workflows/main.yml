@@ -5,6 +5,29 @@ on:
   push:
     branches:
       - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x.x' # <--- ¡IMPORTANTE! Reemplaza con tu versión de Flutter
+
+      - name: Get Flutter dependencies
+        run: flutter pub get
+
+      - name: Build Android APK
+        run: flutter build apk --release
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 5
 
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
