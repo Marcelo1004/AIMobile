@@ -2,35 +2,34 @@ name: aula_inteligente
 on:
   push:
     branches:
-      - main
+      - main # Asegúrate de que esta sea la rama principal de tu repositorio
 
 jobs:
   build_android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # ubuntu-latest es adecuado para compilar Android
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Clona tu repositorio en el runner de GitHub Actions
 
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.7.2' # Versión de Flutter que ya confirmaste
+          # Es crucial que esta versión coincida con la que usas localmente o con la que es compatible tu proyecto.
+          # Has usado '3.7.2' antes, que es consistente con tu pubspec.yaml.
+          flutter-version: '3.7.2'
 
-      # ****** ¡CAMBIO IMPORTANTE AQUÍ! ********
-      # Especificamos el directorio de trabajo para este y los siguientes comandos.
-      # Asumo que la raíz de tu proyecto Flutter está en la raíz del repositorio clonado.
       - name: Get Flutter dependencies
         run: flutter pub get
-        working-directory: ./ # Asegura que se ejecuta en la raíz del repositorio
+        working-directory: ./ # <--- ¡IMPORTANTE! Ejecuta 'flutter pub get' en la raíz del repositorio
 
       - name: Build Android APK
         run: flutter build apk --release
-        working-directory: ./ # Asegura que se ejecuta en la raíz del repositorio
+        working-directory: ./ # <--- ¡IMPORTANTE! Ejecuta 'flutter build apk' en la raíz del repositorio
 
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 5
+          retention-days: 5 # Define por cuántos días se guarda el artefacto
